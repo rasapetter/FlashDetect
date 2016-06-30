@@ -169,7 +169,13 @@ var FlashDetect = new function(){
             var mimeTypes = navigator.mimeTypes;
             if(mimeTypes && mimeTypes[type] && mimeTypes[type].enabledPlugin && mimeTypes[type].enabledPlugin.description){
                 var version = mimeTypes[type].enabledPlugin.description;
-                var versionObj = parseStandardVersion(version);
+                var versionObj;
+                try {
+                    versionObj = parseStandardVersion(version);
+                } catch (e) {
+                    self.installed = false;
+                    return;
+                }
                 self.raw = versionObj.raw;
                 self.major = versionObj.major;
                 self.minor = versionObj.minor; 
@@ -185,7 +191,13 @@ var FlashDetect = new function(){
                     self.installed = true;
                     version = activeXDetectRules[i].version(obj);
                     if(version!=-1){
-                        var versionObj = parseActiveXVersion(version);
+                        var versionObj;
+                        try {
+                            versionObj = parseActiveXVersion(version);
+                        } catch (e) {
+                            self.installed = false;
+                            return;
+                        }
                         self.raw = versionObj.raw;
                         self.major = versionObj.major;
                         self.minor = versionObj.minor; 
